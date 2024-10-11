@@ -108,5 +108,164 @@ const cadastroProdutos = function(){
                             {nome: 'Software'},
                             {nome: 'Acessórios'},
                             {nome: 'Games'},
+                        ]
+
+    let listaDeMarcas = [
+                            {
+                                nome: 'Dell Computadores',
+                                telefone: '876294738',
+                                email: 'dell@compras.com.br'
+                            },
+                            {
+                                nome: 'Microsoft Tecnologia',
+                                telefone: '347393526',
+                                email: 'microsoft@pedidos.com'
+                            },
+                            {
+                                nome: 'Logitech',
+                                telefone: '787878785',
+                                email: 'logitech@logitech.com.br'
+                            },
+                            {
+                                nome: 'Apple Computadores',
+                                telefone: '232323231',
+                                email: 'apple@apple.com'
+                            }
+                        ]
+
+    let listaDeProdutos = [
+                            {
+                                nome: 'mouse',
+                                descricao: 'mouse com fio',
+                                quantidade: '50',
+                                preco: '60',
+                                cor: listaDeCores,
+                                marca: [
+                                    listaDeMarcas[0]
+                                ],
+                                categoria: [
+                                    listaDeCategorias[1],
+                                    listaDeCategorias[3],
+                                    listaDeCategorias[4]
+                                ]
+                            },
+                            {
+                                nome: 'teclado',
+                                descricao: 'teclado com fio RGB',
+                                quantidade: '32',
+                                preco: '150',
+                                cor: [
+                                    listaDeCores[0],
+                                    listaDeCores[1]
+                                ],
+                                marca: [
+                                    listaDeMarcas[2]
+                                ],
+                                categoria: [
+                                    listaDeCategorias[1],
+                                    listaDeCategorias[3],
+                                    listaDeCategorias[4]
+                                ]
+                            },
+                            {
+                                nome: 'mouse',
+                                descricao: 'mouse gamer RGB',
+                                quantidade: '38',
+                                preco: '130',
+                                cor: [
+                                    listaDeCores[0],
+                                    listaDeCores[1]
+                                ],
+                                marca: [
+                                    listaDeMarcas[2]
+                                ],
+                                categoria: [
+                                    listaDeCategorias[1],
+                                    listaDeCategorias[3],
+                                    listaDeCategorias[4]
+                                ]
+                            },
+                            {
+                                nome: 'monitor',
+                                descricao: 'monitor 4k',
+                                quantidade: '97',
+                                preco: '850',
+                                cor: [
+                                    listaDeCores[0],
+                                    listaDeCores[1]
+                                ],
+                                marca: [
+                                    listaDeMarcas[0]
+                                ],
+                                categoria: [
+                                    listaDeCategorias[0],
+                                    listaDeCategorias[1]
+                                ]
+                            },
+                            {
+                                nome: 'headset sem fio',
+                                descricao: 'headset gamer sem fio',
+                                quantidade: '127',
+                                preco: '400',
+                                cor: [
+                                    listaDeCores[0],
+                                    listaDeCores[1],
+                                    listaDeCores[3]
+                                ],
+                                marca: [
+                                    listaDeCores[2]
+                                ],
+                                categoria: [
+                                    listaDeCategorias[1],
+                                    listaDeCategorias[3],
+                                    listaDeCategorias[4],
+                                ]
+                            }
+                            
     ]
+    return listaDeProdutos
 }
+
+const pesquisarProduto = function(nome){
+    let nomeProduto = String(nome).toUpperCase()
+    let produtos = cadastroProdutos()
+    let produtosEncontrados = []
+
+    produtos.forEach(function(item){
+        if(String(item.nome).toUpperCase().includes(nomeProduto)){
+            produtosEncontrados.push(item)
+        }
+    })
+
+    if(produtosEncontrados.length > 0){
+        return produtosEncontrados
+    }else{
+        return false
+    }
+}
+
+const listarProduto = function(nome){
+    let produtos = pesquisarProduto(nome)
+
+    if(produtos != false){
+        produtos.forEach(function(item){
+            console.log(`Nome do Produto: ${item.nome}`)
+            console.log(`Descrição do Produto: ${item.descricao}`)
+            console.log(`Quantidade do Produto: ${item.quantidade}`)
+            console.log(`Preço do Produto: R$${item.preco}`)
+
+            item.cor.forEach(function(itemCor){
+                console.log(`-- Cor do Produto: ${itemCor.nome}`)
+            })
+
+            item.marca.forEach(function(itemMarca){
+                console.log(`-- Marca do Produto: ${itemMarca.nome}`)
+            })
+
+            item.categoria.forEach(function(itemCategoria){
+                console.log(`-- Categoria do Produto: ${itemCategoria.nome}`)
+            })
+        })
+    }
+}
+listarProduto('headset')

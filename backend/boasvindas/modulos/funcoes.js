@@ -1,19 +1,21 @@
 const listaContatos = require('./contatos.js')
 
 //função que retorna lista dos dados pessoais por usuario
-const getDadosPessoal = function(number){
+const getDadosPessoal = function(numeroTelefone){
     let dadosContatos = listaContatos.contatos['whats-users']
+    let telefone = String(numeroTelefone)
     let status = false
-    let listaDadosContatos = {
-        contato: []
-    }
+    let listaDadosContatos = {}
 
     dadosContatos.forEach(function(valor){
-        listaDadosContatos.contato.push(valor.id)
-        listaDadosContatos.contato.push(valor.account)
-        listaDadosContatos.contato.push(valor.number)
-        listaDadosContatos.contato.push(valor.createdsince)
-        status = true
+        if(String(valor.number) === telefone){
+            listaDadosContatos.id = valor.id
+            listaDadosContatos.account = valor.account
+            listaDadosContatos.inicio = valor.createdsince.start
+            listaDadosContatos.fim = valor.createdsince.end
+            listaDadosContatos.contato = telefone
+            status = true
+        }
     })
 
     if(status === true){
@@ -24,18 +26,19 @@ const getDadosPessoal = function(number){
 }
 
 //função que retorna dados da conta do profile do usuário
-const getDadosProfile = function(){
+const getDadosProfile = function(numeroTelefone){
     let dadosContatos = listaContatos.contatos['whats-users']
+    let telefone = String(numeroTelefone)
     let status = false
-    let listaDadosProfile = {
-        contato: []
-    }
+    let listaDadosProfile = {}
 
     dadosContatos.forEach(function(valor){
-        listaDadosProfile.contato.push(valor.nickname)
-        listaDadosProfile.contato.push(valor.profileimage)
-        listaDadosProfile.contato.push(valor.background)
-        status = true
+        if(String(valor.number) === telefone){
+            listaDadosProfile.nickname = valor.nickname
+            listaDadosProfile.image = valor.profileimage
+            listaDadosProfile.backgroud = valor.background
+            status = true
+        }
     })
 
     if(status === true){
@@ -46,23 +49,24 @@ const getDadosProfile = function(){
 }
 
 // função que retorna lista de dados de contato para cada usuário
-const getDadosContatos = function(){
+const getDadosContatos = function(numeroTelefone){
     let dadosContatos = listaContatos.contatos['whats-users']
+    let telefone = String(numeroTelefone)
     let status = false
-    let listaDadosContatos = {
-        contato: []
-    }
+    let listaDadosContatos = []
 
     dadosContatos.forEach(function(valor){
-        valor.contacts.forEach(function(dados){
-            let dadosEncontrados = {}
-            dadosEncontrados.name = dados.name
-            dadosEncontrados.description = dados.description
-            dadosEncontrados.image = dados.image
+        if(String(valor.number) === telefone){
+            status = true
 
-            listaDadosContatos.contato.push(dadosEncontrados)
-        })
-        status = true
+            valor.contacts.forEach(function(dados){
+                let dadosEncontrados = {}
+                dadosEncontrados.name = dados.name
+                dadosEncontrados.image = dados.image
+                dadosEncontrados.description = dados.description
+                listaDadosContatos.push(dadosEncontrados)
+            })
+        }
     })
 
     if(status === true){
@@ -72,11 +76,82 @@ const getDadosContatos = function(){
     }
 }
 
+// funcao que retorna a lista de conversas de cada usuario
+const getlistaConversaUser = function(numeroTelefone){
+    let dadosContatos = listaContatos.contatos['whats-users']
+    let telefone = String(numeroTelefone)
+    let status = false
+    let listaConversas = []
 
-// console.log(getDadosPessoal())
-// console.log(getDadosProfile());
-console.log(getDadosContatos());
+    dadosContatos.forEach(function(valor){
+        if(String(valor.number) === telefone){
+            status = true
 
-console.log();
+            valor.contacts.forEach(function(contato){
+                let conversa = {}
+                conversa.name = contato.name
+                conversa.image = contato.image
+                conversa.description = contato.description
+                conversa.messages = []
+
+                contato.messages.forEach(function(mensagem){
+                    let dadosMensagem = {}
+                    dadosMensagem.sender = mensagem.sender
+                    dadosMensagem.content = mensagem.content
+                    dadosMensagem.time = mensagem.time
+
+                    conversa.messages.push(dadosMensagem)
+                })
+
+                listaConversas.push(conversa)
+            })
+        }
+    })
+
+    if(status === true){
+        return listaConversas
+    }else{
+        return status
+    }
+}
+
+// funcao que retorna um filtro pelo usuário e nome do seu contato
+const getFiltroUser = function(numeroTelefone, contato){
+    let dadosContatos = listaContatos.contatos['whats-users']
+    let telefone = numeroTelefone
+    let contatoEscolhido = contato
+    let status = false
+    let listaConversas = {
+        nome: telefone,
+        contato: contatoEscolhido,
+        mensagens: []
+    }
+
+    dadosContatos.forEach(function(valor){
+        valor.contacts.forEach(function(dados){
+            if(String(valor.number) === telefone && String(dados.name) ===  contatoEscolhido){
+                listaConversas.mensagens.push(dados.messages)
+                status = true
+            }
+        })
+    })
+
+    if(status){
+        return listaConversas
+    }else{
+        return status
+    }
+}
+
+
+// testes de funções
+// console.log(getDadosPessoal('11987876567'))
+// console.log(getDadosProfile(11987876567));
+// console.log(getDadosContatos('11987876567'));
+// console.log(getlistaConversaUser('11987876567'));
+// console.log(JSON.stringify(getlistaConversaUser('11987876567'), null, 2))
+console.log(getFiltroUser('11987876567','Ana Maria'))
+
+// console.log();
 
 // console.log(listaContatos.contatos['whats-users']);

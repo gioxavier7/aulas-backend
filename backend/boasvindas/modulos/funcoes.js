@@ -143,6 +143,45 @@ const getFiltroUser = function(numeroTelefone, contato){
     }
 }
 
+// funcao que retorna filtro pesquisa por palavra chave
+const getFiltrarConversas = function(numeroTelefone, nomeContato, palavraChave){
+    let dadosContatos = listaContatos.contatos['whats-users']
+    let telefone = numeroTelefone
+    let contatoEscolhido = nomeContato
+    let palavra = palavraChave.toLowerCase()
+    let status = false
+    let listaConversas = {
+        nome: telefone,
+        contato: contatoEscolhido,
+        mensagem: []
+    }
+
+    dadosContatos.forEach(function(usuario){
+        if(String(usuario.number) === telefone){
+            usuario.contacts.forEach(function(contato){
+                if(String(contato.name) === contatoEscolhido){
+                    listaConversas.mensagem = contato.messages.filter(function(mensagem){
+                        let conteudoMensagem = mensagem.content.toLowerCase()
+                        return conteudoMensagem.includes(palavra)
+                    }).map(function(mensagem){
+                        return{
+                            sender: mensagem.sender,
+                            content: mensagem.content,
+                            time: mensagem.time
+                        }
+                    })
+                    status = true
+                }
+            })
+        }
+    })
+    if(status){
+        return listaConversas
+    }else{
+        return false
+    }
+};
+
 
 // testes de funções
 // console.log(getDadosPessoal('11987876567'))
@@ -150,7 +189,8 @@ const getFiltroUser = function(numeroTelefone, contato){
 // console.log(getDadosContatos('11987876567'));
 // console.log(getlistaConversaUser('11987876567'));
 // console.log(JSON.stringify(getlistaConversaUser('11987876567'), null, 2))
-console.log(getFiltroUser('11987876567','Ana Maria'))
+// console.log(getFiltroUser('11987876567','Ana Maria'))
+// console.log(getFiltrarConversas('11987876567', 'Max Kellerman', 'trabalho'));
 
 // console.log();
 
